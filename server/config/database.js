@@ -2,15 +2,17 @@ const { Sequelize } = require('sequelize');
 const path = require('path');
 require('dotenv').config();
 
+const isVercel = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.VERCEL_ENV);
 const dialect = process.env.DB_DIALECT || 'sqlite';
 
 let sequelize;
 
 if (dialect === 'sqlite') {
-  const isVercel = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+  // Use :memory: or /tmp/meditrack.sqlite on Vercel serverless environment
   const storagePath = isVercel 
-    ? '/tmp/meditrack.sqlite' 
+    ? ':memory:' 
     : path.resolve(__dirname, '..', process.env.DB_STORAGE || 'meditrack.sqlite');
+
   sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: storagePath,
