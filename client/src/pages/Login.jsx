@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, Lock, Mail, AlertCircle, ShieldCheck, UserCheck, Stethoscope, Pill, User } from 'lucide-react';
+import { Activity, Lock, Mail, AlertCircle, Shield, Stethoscope, Pill, User } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('patient1@gmail.com');
@@ -34,10 +34,10 @@ export default function Login() {
   };
 
   const demoAccounts = [
-    { role: 'Admin', email: 'admin@meditrack.ng', icon: ShieldCheck, color: '#F43F5E' },
-    { role: 'Doctor', email: 'dr.emeka@meditrack.ng', icon: Stethoscope, color: '#10B981' },
-    { role: 'Pharmacist', email: 'pharm.chioma@meditrack.ng', icon: Pill, color: '#F59E0B' },
-    { role: 'Patient', email: 'patient1@gmail.com', icon: User, color: '#06B6D4' },
+    { role: 'Admin', email: 'admin@meditrack.ng', icon: Shield },
+    { role: 'Doctor', email: 'dr.emeka@meditrack.ng', icon: Stethoscope },
+    { role: 'Pharmacist', email: 'pharm.chioma@meditrack.ng', icon: Pill },
+    { role: 'Patient', email: 'patient1@gmail.com', icon: User },
   ];
 
   const selectDemo = (demoEmail) => {
@@ -52,114 +52,66 @@ export default function Login() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: 'radial-gradient(ellipse at top, #0F172A 0%, #060911 100%)',
+      backgroundColor: '#0B0F19',
       padding: '1.5rem',
-      position: 'relative',
-      overflow: 'hidden',
     }}>
-      {/* Background Ambient Glow Orbs */}
       <div style={{
-        position: 'absolute',
-        top: '-10%',
-        left: '20%',
-        width: '400px',
-        height: '400px',
-        background: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'blur(50px)',
-      }} />
-      <div style={{
-        position: 'absolute',
-        bottom: '-10%',
-        right: '20%',
-        width: '450px',
-        height: '450px',
-        background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%)',
-        borderRadius: '50%',
-        filter: 'blur(60px)',
-      }} />
-
-      <div className="glass-card animate-fade-in" style={{
         width: '100%',
-        maxWidth: '480px',
-        padding: '2.75rem 2.5rem',
-        position: 'relative',
-        zIndex: 1,
-        border: '1px solid rgba(6, 182, 212, 0.25)',
-        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(6, 182, 212, 0.15)',
+        maxWidth: '460px',
+        backgroundColor: '#1F2937',
+        border: '1px solid #374151',
+        borderRadius: '4px',
+        padding: '2.25rem 2rem',
       }}>
-        {/* Hospital System Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2.25rem' }}>
-          <div style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '20px',
-            background: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 30px rgba(6, 182, 212, 0.5)',
-            marginBottom: '1rem',
-          }}>
-            <Activity size={36} color="#FFF" />
-          </div>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '2rem',
-            fontWeight: 800,
-            letterSpacing: '-0.02em',
-            background: 'linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}>
-            MEDITRACK HMS
-          </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.88rem', marginTop: '0.25rem' }}>
-            Unified Nigerian Hospital Management Portal
-          </p>
-
-          <div style={{
-            marginTop: '0.85rem',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            background: 'rgba(16, 185, 129, 0.1)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            padding: '0.25rem 0.75rem',
-            borderRadius: '9999px',
-            fontSize: '0.72rem',
-            fontWeight: 700,
-            color: '#10B981',
-          }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', display: 'inline-block' }} />
-            API Gateway & Database Active
+        {/* Header */}
+        <div style={{ borderBottom: '1px solid #374151', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              backgroundColor: '#2563EB',
+              borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Activity size={22} color="#FFFFFF" />
+            </div>
+            <div>
+              <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                MEDITRACK HMS
+              </h1>
+              <p style={{ fontSize: '0.78rem', color: '#9CA3AF' }}>
+                Enterprise Hospital Management Platform
+              </p>
+            </div>
           </div>
         </div>
 
         {error && (
           <div style={{
-            background: 'rgba(244, 63, 94, 0.15)',
-            border: '1px solid rgba(244, 63, 94, 0.35)',
-            borderRadius: '12px',
-            padding: '0.85rem 1rem',
-            color: '#F43F5E',
+            backgroundColor: '#7F1D1D',
+            border: '1px solid #DC2626',
+            borderRadius: '4px',
+            padding: '0.75rem 1rem',
+            color: '#FCA5A5',
             fontSize: '0.85rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.6rem',
-            marginBottom: '1.5rem',
+            gap: '0.5rem',
+            marginBottom: '1.25rem',
           }}>
-            <AlertCircle size={20} />
+            <AlertCircle size={18} />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Demo Account Role Selector Pills */}
-        <div style={{ marginBottom: '1.75rem' }}>
-          <label className="form-label" style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.6rem' }}>
-            Select Portal Role (One-Click Demo):
+        {/* Demo Account Selector */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <label className="form-label" style={{ fontSize: '0.72rem', color: '#9CA3AF' }}>
+            Demo Quick Login Presets:
           </label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
             {demoAccounts.map((account) => {
               const Icon = account.icon;
               const isSelected = email === account.email;
@@ -172,18 +124,18 @@ export default function Login() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    padding: '0.6rem 0.85rem',
-                    borderRadius: '10px',
-                    background: isSelected ? 'rgba(6, 182, 212, 0.18)' : 'rgba(15, 23, 42, 0.7)',
-                    border: isSelected ? `1px solid ${account.color}` : '1px solid rgba(255, 255, 255, 0.08)',
-                    color: isSelected ? '#FFF' : '#94A3B8',
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '4px',
+                    backgroundColor: isSelected ? '#2563EB' : '#111827',
+                    border: '1px solid',
+                    borderColor: isSelected ? '#3B82F6' : '#374151',
+                    color: isSelected ? '#FFFFFF' : '#D1D5DB',
                     cursor: 'pointer',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    transition: 'all 0.2s ease',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
                   }}
                 >
-                  <Icon size={16} color={account.color} />
+                  <Icon size={14} />
                   <span>{account.role}</span>
                 </button>
               );
@@ -193,14 +145,14 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Email Credentials</label>
+            <label className="form-label">Workstation Email</label>
             <div style={{ position: 'relative' }}>
-              <Mail size={18} color="#64748B" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <Mail size={16} color="#9CA3AF" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="email"
                 className="form-input"
-                style={{ paddingLeft: '2.8rem' }}
-                placeholder="email@meditrack.ng"
+                style={{ paddingLeft: '2.5rem' }}
+                placeholder="user@meditrack.ng"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -211,11 +163,11 @@ export default function Login() {
           <div className="form-group">
             <label className="form-label">Password</label>
             <div style={{ position: 'relative' }}>
-              <Lock size={18} color="#64748B" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+              <Lock size={16} color="#9CA3AF" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="password"
                 className="form-input"
-                style={{ paddingLeft: '2.8rem' }}
+                style={{ paddingLeft: '2.5rem' }}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -227,10 +179,10 @@ export default function Login() {
           <button
             type="submit"
             className="btn btn-primary"
-            style={{ width: '100%', padding: '0.9rem', fontSize: '0.95rem', marginTop: '0.5rem' }}
+            style={{ width: '100%', padding: '0.75rem', marginTop: '0.5rem' }}
             disabled={loading}
           >
-            {loading ? 'Verifying Credentials...' : 'Sign In to Portal Workstation'}
+            {loading ? 'Authenticating...' : 'Sign In to System'}
           </button>
         </form>
       </div>

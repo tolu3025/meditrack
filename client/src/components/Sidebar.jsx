@@ -22,26 +22,26 @@ export default function Sidebar() {
     patient: [
       { path: '/patient/dashboard', label: 'Overview', icon: LayoutDashboard },
       { path: '/patient/book', label: 'Book Appointment', icon: Calendar },
-      { path: '/patient/history', label: 'EHR Health History', icon: FileText },
+      { path: '/patient/history', label: 'EHR Medical History', icon: FileText },
       { path: '/patient/bills', label: 'Hospital Invoices', icon: CreditCard },
     ],
     doctor: [
-      { path: '/doctor/dashboard', label: 'Workstation', icon: LayoutDashboard },
-      { path: '/doctor/consultation', label: 'New Consultation', icon: PlusCircle },
+      { path: '/doctor/dashboard', label: 'Workstation Queue', icon: LayoutDashboard },
+      { path: '/doctor/consultation', label: 'New EHR Consultation', icon: PlusCircle },
       { path: '/doctor/appointments', label: 'Schedule Calendar', icon: Calendar },
-      { path: '/doctor/patients', label: 'Patient EHR Search', icon: Users },
+      { path: '/doctor/patients', label: 'Patient EHR Lookup', icon: Users },
     ],
     pharmacist: [
-      { path: '/pharmacy/dashboard', label: 'Workstation', icon: LayoutDashboard },
-      { path: '/pharmacy/queue', label: 'Pending Dispense Queue', icon: Pill },
-      { path: '/pharmacy/inventory', label: 'Drug Inventory', icon: Package },
+      { path: '/pharmacy/dashboard', label: 'Dispensary Queue', icon: LayoutDashboard },
+      { path: '/pharmacy/queue', label: 'Pending Prescriptions', icon: Pill },
+      { path: '/pharmacy/inventory', label: 'Medication Inventory', icon: Package },
     ],
     admin: [
       { path: '/admin/dashboard', label: 'Executive Analytics', icon: LayoutDashboard },
       { path: '/admin/users', label: 'User Accounts', icon: Users },
       { path: '/admin/departments', label: 'Departments', icon: Building },
       { path: '/admin/appointments', label: 'Hospital Appointments', icon: Calendar },
-      { path: '/admin/billing', label: 'Revenue & Invoices', icon: CreditCard },
+      { path: '/admin/billing', label: 'Invoices & Revenue', icon: CreditCard },
     ],
   };
 
@@ -49,23 +49,25 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: '250px',
-      background: 'rgba(11, 17, 32, 0.98)',
-      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-      padding: '1.75rem 1rem',
+      width: '230px',
+      backgroundColor: '#111827',
+      borderRight: '1px solid #374151',
+      padding: '1.25rem 0.75rem',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.6rem',
+      gap: '0.4rem',
     }}>
       <div style={{
-        padding: '0 0.75rem 0.75rem 0.75rem',
-        fontSize: '0.7rem',
-        fontWeight: 800,
-        color: '#64748B',
-        letterSpacing: '0.08em',
+        padding: '0 0.5rem 0.75rem 0.5rem',
+        fontSize: '0.68rem',
+        fontWeight: 700,
+        color: '#9CA3AF',
+        letterSpacing: '0.06em',
         textTransform: 'uppercase',
+        borderBottom: '1px solid #1F2937',
+        marginBottom: '0.5rem',
       }}>
-        {user.role} Navigation
+        {user.role} WORKSTATION
       </div>
 
       {navItems.map((item) => {
@@ -77,19 +79,18 @@ export default function Sidebar() {
             style={({ isActive }) => ({
               display: 'flex',
               alignItems: 'center',
-              gap: '0.85rem',
-              padding: '0.8rem 1rem',
-              borderRadius: '12px',
-              fontWeight: isActive ? 800 : 600,
-              fontSize: '0.88rem',
-              color: isActive ? '#06B6D4' : '#94A3B8',
-              backgroundColor: isActive ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
-              border: isActive ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
-              boxShadow: isActive ? '0 0 15px rgba(6, 182, 212, 0.15)' : 'none',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+              gap: '0.75rem',
+              padding: '0.65rem 0.85rem',
+              borderRadius: '4px',
+              fontWeight: isActive ? 700 : 500,
+              fontSize: '0.85rem',
+              color: isActive ? '#FFFFFF' : '#D1D5DB',
+              backgroundColor: isActive ? '#2563EB' : 'transparent',
+              border: isActive ? '1px solid #1D4ED8' : '1px solid transparent',
+              transition: 'all 0.15s ease',
             })}
           >
-            <Icon size={18} />
+            <Icon size={16} />
             <span>{item.label}</span>
           </NavLink>
         );

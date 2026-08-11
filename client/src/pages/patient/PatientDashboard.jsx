@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../../utils/api';
 import { useAuth } from '../../context/AuthContext';
-import { Calendar, Pill, CreditCard, Clock, ArrowRight, User } from 'lucide-react';
+import { Calendar, Pill, CreditCard, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function PatientDashboard() {
@@ -38,65 +38,66 @@ export default function PatientDashboard() {
 
   return (
     <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Welcome, {user?.first_name}!</h1>
-        <p style={{ color: '#94A3B8' }}>Manage your appointments, health records, prescriptions, and bills.</p>
+      <div style={{ marginBottom: '1.5rem', borderBottom: '1px solid #374151', paddingBottom: '1rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#FFFFFF' }}>Patient Workstation</h1>
+        <p style={{ color: '#9CA3AF', fontSize: '0.85rem' }}>View appointments, medical history, prescriptions, and billing invoices.</p>
       </div>
 
       <div className="grid-stats">
-        <div className="glass-card" style={{ borderLeft: '4px solid #0EA5E9' }}>
+        <div className="solid-card" style={{ borderLeft: '4px solid #2563EB' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>UPCOMING APPOINTMENTS</span>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem' }}>{upcomingAppts.length}</h2>
+              <span style={{ fontSize: '0.75rem', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase' }}>Upcoming Appointments</span>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.25rem', color: '#FFFFFF' }}>{upcomingAppts.length}</h2>
             </div>
-            <Calendar size={28} color="#0EA5E9" />
+            <Calendar size={24} color="#2563EB" />
           </div>
         </div>
 
-        <div className="glass-card" style={{ borderLeft: '4px solid #F59E0B' }}>
+        <div className="solid-card" style={{ borderLeft: '4px solid #D97706' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>PENDING PRESCRIPTIONS</span>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem' }}>{activePrescriptions.length}</h2>
+              <span style={{ fontSize: '0.75rem', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase' }}>Pending Prescriptions</span>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.25rem', color: '#FFFFFF' }}>{activePrescriptions.length}</h2>
             </div>
-            <Pill size={28} color="#F59E0B" />
+            <Pill size={24} color="#D97706" />
           </div>
         </div>
 
-        <div className="glass-card" style={{ borderLeft: '4px solid #EF4444' }}>
+        <div className="solid-card" style={{ borderLeft: '4px solid #DC2626' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: 600 }}>UNPAID BALANCE</span>
-              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '0.25rem' }}>
+              <span style={{ fontSize: '0.75rem', color: '#9CA3AF', fontWeight: 700, textTransform: 'uppercase' }}>Unpaid Invoice Balance</span>
+              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '0.25rem', color: '#FFFFFF' }}>
                 ₦{billing?.summary?.total_unpaid || '0.00'}
               </h2>
             </div>
-            <CreditCard size={28} color="#EF4444" />
+            <CreditCard size={24} color="#DC2626" />
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', marginTop: '1.5rem' }}>
-        <div className="glass-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Upcoming Scheduled Appointments</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.25rem' }}>
+        <div className="solid-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #374151', paddingBottom: '0.75rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF' }}>Scheduled Appointments</h3>
             <Link to="/patient/book" className="btn btn-primary btn-sm">
-              <Calendar size={16} /> Book New
+              <Calendar size={14} /> Book Appointment
             </Link>
           </div>
 
           {upcomingAppts.length === 0 ? (
-            <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>No upcoming appointments scheduled.</p>
+            <p style={{ color: '#9CA3AF', fontSize: '0.85rem' }}>No upcoming appointments scheduled.</p>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {upcomingAppts.slice(0, 3).map((appt) => (
-                <div key={appt.id} style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {upcomingAppts.slice(0, 4).map((appt) => (
+                <div key={appt.id} style={{ backgroundColor: '#111827', padding: '0.85rem', borderRadius: '4px', border: '1px solid #374151', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <h4 style={{ fontWeight: 700 }}>Dr. {appt.doctor?.user?.first_name} {appt.doctor?.user?.last_name}</h4>
-                    <span style={{ fontSize: '0.8rem', color: '#0EA5E9' }}>{appt.doctor?.department?.name}</span>
-                    <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <Clock size={14} /> {appt.appointment_date} at {appt.start_time} - {appt.end_time}
+                    <h4 style={{ fontWeight: 700, color: '#F9FAFB', fontSize: '0.9rem' }}>
+                      Dr. {appt.doctor?.user?.first_name} {appt.doctor?.user?.last_name} ({appt.doctor?.specialization})
+                    </h4>
+                    <div style={{ fontSize: '0.8rem', color: '#9CA3AF', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <Clock size={12} /> {appt.appointment_date} | {appt.start_time} - {appt.end_time}
                     </div>
                   </div>
                   <span className="badge badge-scheduled">Scheduled</span>
@@ -106,20 +107,20 @@ export default function PatientDashboard() {
           )}
         </div>
 
-        <div className="glass-card">
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>Quick Actions</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+        <div className="solid-card">
+          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '1rem', borderBottom: '1px solid #374151', paddingBottom: '0.75rem' }}>Quick Actions</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             <Link to="/patient/book" className="btn btn-secondary" style={{ justifyContent: 'space-between' }}>
-              <span>Book Doctor Appointment</span>
-              <ArrowRight size={16} />
+              <span>Book Appointment</span>
+              <ArrowRight size={14} />
             </Link>
             <Link to="/patient/history" className="btn btn-secondary" style={{ justifyContent: 'space-between' }}>
-              <span>View Full EHR History</span>
-              <ArrowRight size={16} />
+              <span>View EHR Records</span>
+              <ArrowRight size={14} />
             </Link>
             <Link to="/patient/bills" className="btn btn-secondary" style={{ justifyContent: 'space-between' }}>
-              <span>Pay Hospital Bills</span>
-              <ArrowRight size={16} />
+              <span>Pay Invoices</span>
+              <ArrowRight size={14} />
             </Link>
           </div>
         </div>
