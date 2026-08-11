@@ -4,33 +4,24 @@ const seedServerless = require('../server/seeders/seedServerless');
 
 let isInitialized = false;
 
-async function initServerlessDB() {
+function initServerlessDB() {
   if (isInitialized) return;
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync({ force: false });
-    await seedServerless();
-    isInitialized = true;
-    console.log('✅ Vercel Serverless Database Ready');
-  } catch (err) {
-    console.error('⚠️ DB Init Warning (non-fatal):', err.message);
-    // Mark initialized so we don't block subsequent API requests
-    isInitialized = true;
-  }
+  isInitialized = true;
+
+  // Non-blocking background database initialization
+  Promise.resolve().then(async () => {
+    try {
+      await sequelize.authenticate();
+      await sequelize.sync({ force: false });
+      await seedServerless();
+      console.log('✅ Vercel DB Ready');
+    } catch (err) {
+      console.warn('⚠️ Serverless DB init warning:', err.message);
+    }
+  });
 }
 
-module.exports = async (req, res) => {
-  try {
-    await initServerlessDB();
-    return app(req, res);
-  } catch (err) {
-    console.error('🔥 Serverless Function Catch Error:', err);
-    if (!res.headersSent) {
-      res.status(500).json({
-        success: false,
-        message: 'Serverless execution error',
-        error: err.message,
-      });
-    }
-  }
+module.exports = (req, res) => {
+  initServerlessDB();
+  return app(req, res);
 };

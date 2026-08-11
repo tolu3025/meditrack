@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Health Check Endpoint
+// Health Check Endpoints
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -31,16 +31,41 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    system: 'MediTrack HMS API Server',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// API Routes (Mounted both with /api and direct prefix for Vercel rewrite compatibility)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/patients', patientRoutes);
+app.use('/patients', patientRoutes);
+
 app.use('/api/doctors', doctorRoutes);
+app.use('/doctors', doctorRoutes);
+
 app.use('/api/appointments', appointmentRoutes);
+app.use('/appointments', appointmentRoutes);
+
 app.use('/api/medical-records', medicalRecordRoutes);
+app.use('/medical-records', medicalRecordRoutes);
+
 app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/prescriptions', prescriptionRoutes);
+
 app.use('/api/medications', medicationRoutes);
+app.use('/medications', medicationRoutes);
+
 app.use('/api/billing', billingRoutes);
+app.use('/billing', billingRoutes);
+
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 
 // Centralized Error Handling Middleware
 app.use(errorHandler);
