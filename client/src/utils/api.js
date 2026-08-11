@@ -28,6 +28,19 @@ export async function apiRequest(endpoint, method = 'GET', data = null) {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
     
+    // Read raw response text first to handle non-JSON HTML/Text error responses gracefully
+    const rawText = await response.text();
+    let result = null;
+
+    try {
+      result = JSON.parse(rawText);
+    } catch (parseErr) {
+      if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}: ${rawText.slice(0, 120)}`);
+      }
+      throw new Error(`Invalid JSON response: ${rawText.slice(0, 100)}`);
+    }
+
     // Handle 401 Unauthorized (token refresh opportunity)
     if (response.status === 401 && !endpoint.includes('/auth/login')) {
       const refreshToken = localStorage.getItem('refreshToken');
@@ -37,24 +50,26 @@ export async function apiRequest(endpoint, method = 'GET', data = null) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ token: refreshToken }),
         });
-        const refreshData = await refreshRes.json();
-        if (refreshData.success) {
-          localStorage.setItem('accessToken', refreshData.data.accessToken);
-          localStorage.setItem('refreshToken', refreshData.data.refreshToken);
-          // Retry original request with new token
-          headers['Authorization'] = `Bearer ${refreshData.data.accessToken}`;
-          const retryResponse = await fetch(`${API_BASE_URL}${endpoint}`, options);
-          return await retryResponse.json();
-        }
+        const refreshText = await refreshRes.text();
+        try {
+          const refreshData = JSON.parse(refreshText);
+          if (refreshData.success) {
+            localStorage.setItem('accessToken', refreshData.data.accessToken);
+            localStorage.setItem('refreshToken', refreshData.data.refreshToken);
+            headers['Authorization'] = `Bearer ${refreshData.data.accessToken}`;
+            const retryResponse = await fetch(`${API_BASE_URL}${endpoint}`, options);
+            const retryText = await retryResponse.text();
+            return JSON.parse(retryText);
+          }
+        } catch (e) {}
       }
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       window.location.href = '/login';
     }
 
-    const result = await response.json();
     if (!response.ok) {
-      throw new Error(result.message || 'An error occurred during API call');
+      throw new Error(result.message || result.error || `Server Error (${response.status})`);
     }
 
     return result;

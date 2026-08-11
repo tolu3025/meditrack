@@ -9,9 +9,9 @@ import {
   User,
   Users,
   Pill,
-  ShieldCheck,
   Building,
   Package,
+  PlusCircle,
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -20,30 +20,28 @@ export default function Sidebar() {
 
   const roleNavItems = {
     patient: [
-      { path: '/patient/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/patient/dashboard', label: 'Overview', icon: LayoutDashboard },
       { path: '/patient/book', label: 'Book Appointment', icon: Calendar },
-      { path: '/patient/history', label: 'Medical History', icon: FileText },
-      { path: '/patient/bills', label: 'My Bills', icon: CreditCard },
-      { path: '/patient/profile', label: 'My Profile', icon: User },
+      { path: '/patient/history', label: 'EHR Health History', icon: FileText },
+      { path: '/patient/bills', label: 'Hospital Invoices', icon: CreditCard },
     ],
     doctor: [
-      { path: '/doctor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/doctor/appointments', label: 'Appointments', icon: Calendar },
-      { path: '/doctor/patients', label: 'Patient Search & EHR', icon: Users },
-      { path: '/doctor/consultation', label: 'New Consultation', icon: FileText },
-      { path: '/doctor/prescriptions', label: 'Prescriptions Issued', icon: Pill },
+      { path: '/doctor/dashboard', label: 'Workstation', icon: LayoutDashboard },
+      { path: '/doctor/consultation', label: 'New Consultation', icon: PlusCircle },
+      { path: '/doctor/appointments', label: 'Schedule Calendar', icon: Calendar },
+      { path: '/doctor/patients', label: 'Patient EHR Search', icon: Users },
     ],
     pharmacist: [
-      { path: '/pharmacy/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { path: '/pharmacy/queue', label: 'Pending Queue', icon: Pill },
-      { path: '/pharmacy/inventory', label: 'Medication Inventory', icon: Package },
+      { path: '/pharmacy/dashboard', label: 'Workstation', icon: LayoutDashboard },
+      { path: '/pharmacy/queue', label: 'Pending Dispense Queue', icon: Pill },
+      { path: '/pharmacy/inventory', label: 'Drug Inventory', icon: Package },
     ],
     admin: [
-      { path: '/admin/dashboard', label: 'Analytics Dashboard', icon: LayoutDashboard },
-      { path: '/admin/users', label: 'User Management', icon: Users },
+      { path: '/admin/dashboard', label: 'Executive Analytics', icon: LayoutDashboard },
+      { path: '/admin/users', label: 'User Accounts', icon: Users },
       { path: '/admin/departments', label: 'Departments', icon: Building },
-      { path: '/admin/appointments', label: 'All Appointments', icon: Calendar },
-      { path: '/admin/billing', label: 'Billing & Invoices', icon: CreditCard },
+      { path: '/admin/appointments', label: 'Hospital Appointments', icon: Calendar },
+      { path: '/admin/billing', label: 'Revenue & Invoices', icon: CreditCard },
     ],
   };
 
@@ -51,16 +49,23 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: '240px',
-      background: '#1E293B',
-      borderRight: '1px solid rgba(255,255,255,0.08)',
-      padding: '1.5rem 1rem',
+      width: '250px',
+      background: 'rgba(11, 17, 32, 0.98)',
+      borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+      padding: '1.75rem 1rem',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.5rem',
+      gap: '0.6rem',
     }}>
-      <div style={{ padding: '0 0.5rem 1rem 0.5rem', fontSize: '0.75rem', fontWeight: 800, color: '#64748B', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-        {user.role} NAVIGATION
+      <div style={{
+        padding: '0 0.75rem 0.75rem 0.75rem',
+        fontSize: '0.7rem',
+        fontWeight: 800,
+        color: '#64748B',
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+      }}>
+        {user.role} Navigation
       </div>
 
       {navItems.map((item) => {
@@ -73,14 +78,15 @@ export default function Sidebar() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.85rem',
-              padding: '0.75rem 1rem',
-              borderRadius: '10px',
-              fontWeight: isActive ? 700 : 500,
-              fontSize: '0.9rem',
-              color: isActive ? '#0EA5E9' : '#94A3B8',
-              backgroundColor: isActive ? 'rgba(14, 165, 233, 0.12)' : 'transparent',
-              border: isActive ? '1px solid rgba(14, 165, 233, 0.25)' : '1px solid transparent',
-              transition: 'all 0.2s ease',
+              padding: '0.8rem 1rem',
+              borderRadius: '12px',
+              fontWeight: isActive ? 800 : 600,
+              fontSize: '0.88rem',
+              color: isActive ? '#06B6D4' : '#94A3B8',
+              backgroundColor: isActive ? 'rgba(6, 182, 212, 0.12)' : 'transparent',
+              border: isActive ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid transparent',
+              boxShadow: isActive ? '0 0 15px rgba(6, 182, 212, 0.15)' : 'none',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
             })}
           >
             <Icon size={18} />

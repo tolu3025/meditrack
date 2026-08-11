@@ -7,11 +7,14 @@ const dialect = process.env.DB_DIALECT || 'sqlite';
 let sequelize;
 
 if (dialect === 'sqlite') {
-  const storagePath = path.resolve(__dirname, '..', process.env.DB_STORAGE || 'meditrack.sqlite');
+  const isVercel = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+  const storagePath = isVercel 
+    ? '/tmp/meditrack.sqlite' 
+    : path.resolve(__dirname, '..', process.env.DB_STORAGE || 'meditrack.sqlite');
   sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: storagePath,
-    logging: false, // Set to console.log to debug SQL commands
+    logging: false,
   });
 } else {
   sequelize = new Sequelize(
