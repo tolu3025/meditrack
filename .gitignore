@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+
+# Database files
+*.sqlite
+*.sqlite3
+
+# Build outputs
+dist/
+build/
+.expo/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
