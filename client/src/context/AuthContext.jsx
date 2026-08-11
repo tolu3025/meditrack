@@ -10,16 +10,15 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('accessToken');
+      const savedEmail = localStorage.getItem('activeUserEmail') || 'patient1@gmail.com';
       if (token) {
         try {
-          const res = await apiRequest('/auth/me');
+          const res = await apiRequest('/auth/me', 'POST', { email: savedEmail });
           if (res.success) {
             setUser(res.data);
           }
         } catch (err) {
           console.error('Failed to restore user session:', err);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
         }
       }
       setLoading(false);
@@ -33,6 +32,7 @@ export const AuthProvider = ({ children }) => {
     if (res.success) {
       localStorage.setItem('accessToken', res.data.accessToken);
       localStorage.setItem('refreshToken', res.data.refreshToken);
+      localStorage.setItem('activeUserEmail', email);
       setUser(res.data.user);
       return res.data.user;
     }
@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     if (res.success) {
       localStorage.setItem('accessToken', res.data.accessToken);
       localStorage.setItem('refreshToken', res.data.refreshToken);
+      localStorage.setItem('activeUserEmail', userData.email);
       setUser(res.data.user);
       return res.data.user;
     }
@@ -51,6 +52,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('activeUserEmail');
     setUser(null);
     window.location.href = '/login';
   };
