@@ -28,20 +28,19 @@ import UserManagement from './pages/admin/UserManagement';
 
 function MainLayout({ children }) {
   const { user } = useAuth();
-  
-  // If no user, or if we are on the landing page or login page, don't show the dashboard layout
   if (!user) return <>{children}</>;
 
-  // Check if current path is exactly '/'
-  const isLandingPage = window.location.pathname === '/';
-  if (isLandingPage) return <>{children}</>;
+  const path = window.location.pathname;
+  if (path === '/' || path === '/login') return <>{children}</>;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Navbar />
-      <div style={{ display: 'flex', flex: 1 }}>
-        <Sidebar />
-        <main className="main-content">{children}</main>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#F7F8FA' }}>
+      {/* Slim sidebar on the left */}
+      <Sidebar />
+      {/* Everything else: top navbar + scrollable content */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+        <Navbar />
+        <main style={{ flex: 1, overflowY: 'auto' }}>{children}</main>
       </div>
     </div>
   );
