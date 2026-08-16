@@ -51,6 +51,24 @@ function MainLayout({ children }) {
   );
 }
 
+function RootRedirect() {
+  const { user } = useAuth();
+
+  if (user) {
+    if (user.role === 'patient') return <Navigate to="/patient/dashboard" replace />;
+    if (user.role === 'doctor') return <Navigate to="/doctor/dashboard" replace />;
+    if (user.role === 'pharmacist') return <Navigate to="/pharmacy/dashboard" replace />;
+    if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  const isCapacitor = typeof window !== 'undefined' && window.Capacitor;
+  if (isCapacitor) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <LandingPage />;
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -59,7 +77,7 @@ export default function App() {
           <MainLayout>
             <Routes>
               {/* Public */}
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<RootRedirect />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
 

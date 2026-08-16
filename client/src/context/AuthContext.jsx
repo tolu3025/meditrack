@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
       const savedEmail = localStorage.getItem('activeUserEmail');
       if (token && savedEmail) {
         try {
-          const res = await apiRequest('/auth/me', 'POST', { email: savedEmail });
+          const res = await apiRequest('/auth/me', 'GET');
           if (res.success) {
             setUser(res.data);
           } else {

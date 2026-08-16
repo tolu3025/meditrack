@@ -34,23 +34,21 @@ export async function apiRequest(endpoint, method = 'GET', data = null) {
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+    const rawText = await response.text();
+    let result;
+    try {
+      result = JSON.parse(rawText);
+    } catch (parseErr) {
+      result = null;
+    }
 
     if (response.ok) {
-      const rawText = await response.text();
-      try {
-        return JSON.parse(rawText);
-      } catch (parseErr) {
-        // Fallback to mock if server returns non-JSON
-        console.warn(`[Client Fallback] Non-JSON server response on ${endpoint}. Using client mock engine.`);
-        return handleMockRoute(endpoint, method, data);
-      }
+      return result || { success: true };
     } else {
-      console.warn(`[Client Fallback] Server HTTP ${response.status} on ${endpoint}. Using client mock engine.`);
-      return handleMockRoute(endpoint, method, data);
+      return result || { success: false, message: `Server error: HTTP ${response.status}` };
     }
   } catch (error) {
-    // Network or server offline -> execute client mock handler
-    console.warn(`[Client Fallback] Server offline or network error on ${endpoint}. Executing client mock handler.`);
-    return handleMockRoute(endpoint, method, data);
+    console.error(`[API Network Error] ${method} ${endpoint}:`, error);
+    return { success: false, message: 'Network error: Cannot connect to the server. Please check your internet connection.' };
   }
 }
