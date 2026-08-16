@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
 const errorHandler = require('./middleware/errorHandler');
 
 // Route Imports
@@ -91,14 +92,22 @@ app.use('/billing', billingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/admin', adminRoutes);
 
-// JSON 404 handler — must be BEFORE errorHandler
-// Prevents Vercel from returning HTML for unmatched routes
-app.use((req, res) => {
+// JSON 404 handler for API routes
+app.use('/api', (req, res) => {
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.path}`,
   });
 });
+
+// Serve Frontend Static Files for Render / Non-Serverless deployments
+if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/dist/index.html'));
+  });
+}
 
 // Centralized Error Handling Middleware
 app.use(errorHandler);
