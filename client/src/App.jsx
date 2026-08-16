@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import LandingPage from './pages/LandingPage';
+import Signup from './pages/Signup';
 import NotificationsPage from './pages/Notifications';
 import HelpPage from './pages/HelpPage';
 import SettingsPage from './pages/SettingsPage';
@@ -30,7 +31,7 @@ import InventoryManager from './pages/pharmacy/InventoryManager';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 
-const NO_SHELL_PATHS = ['/', '/login'];
+const NO_SHELL_PATHS = ['/', '/login', '/signup'];
 
 function MainLayout({ children }) {
   const { user } = useAuth();
@@ -60,6 +61,7 @@ export default function App() {
               {/* Public */}
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
 
               {/* Shared authenticated pages */}
               <Route element={<PrivateRoute allowedRoles={['patient','doctor','pharmacist','admin']} />}>

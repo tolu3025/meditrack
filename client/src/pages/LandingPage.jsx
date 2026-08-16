@@ -36,7 +36,7 @@ export default function LandingPage() {
         </div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <Link to="/login" style={S.btnOutline}>Log In</Link>
-          <Link to="/login" style={S.btnBlue}>Book a Visit <ArrowRight size={15} /></Link>
+          <Link to="/signup" style={S.btnBlue}>Sign Up <ArrowRight size={15} /></Link>
         </div>
       </nav>
 
@@ -53,8 +53,8 @@ export default function LandingPage() {
             MediTrack delivers modern health management — from appointment booking to EHR records and prescription tracking — all beautifully unified.
           </p>
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '3rem' }}>
-            <Link to="/login" style={S.btnDark}>Book an Appointment <ArrowRight size={16} /></Link>
-            <Link to="/login" style={S.btnOutline}>Patient Portal</Link>
+            <Link to="/signup" style={S.btnDark}>Get Started <ArrowRight size={16} /></Link>
+            <Link to="/login" style={S.btnOutline}>Log In</Link>
           </div>
           <div style={{ display: 'flex', gap: '3rem' }}>
             {[{ v: '12+', l: 'Years of experience' }, { v: '8k+', l: 'Active patients' }, { v: '98%', l: 'Satisfaction rate' }].map(s => (
@@ -195,8 +195,8 @@ export default function LandingPage() {
               <span style={{ fontSize: '0.9rem', color: '#374151' }}>{item}</span>
             </div>
           ))}
-          <Link to="/login" style={{ ...S.btnDark, marginTop: '2rem', display: 'inline-flex' }}>
-            Get Started <ArrowRight size={16} />
+          <Link to="/signup" style={{ ...S.btnDark, marginTop: '2rem', display: 'inline-flex' }}>
+            Create an Account <ArrowRight size={16} />
           </Link>
         </div>
       </section>
@@ -209,8 +209,8 @@ export default function LandingPage() {
           </h2>
           <p style={{ color: '#6B7280', fontSize: '0.9rem' }}>Join thousands of patients managing their health with MediTrack.</p>
         </div>
-        <Link to="/login" style={{ ...S.btnBlue, padding: '1rem 2.5rem', fontSize: '1rem' }}>
-          Book an Appointment <ArrowRight size={18} />
+        <Link to="/signup" style={{ ...S.btnBlue, padding: '1rem 2.5rem', fontSize: '1rem' }}>
+          Create an Account <ArrowRight size={18} />
         </Link>
       </section>
 
