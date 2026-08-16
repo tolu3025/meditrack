@@ -10,16 +10,6 @@ import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { Link } from 'react-router-dom';
 
-function ECGLine({ color = '#1D4ED8' }) {
-  return (
-    <svg width="100%" height="48" viewBox="0 0 300 48" preserveAspectRatio="none">
-      <polyline
-        points="0,28 18,28 24,6 30,44 36,28 54,28 60,14 66,38 72,28 96,28 102,10 108,40 114,28 150,28 156,18 162,34 168,28 210,28 216,20 222,34 228,28 300,28"
-        fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function Sparkline({ data, color }) {
   if (!data || data.length < 2) return null;
@@ -122,7 +112,6 @@ export default function PatientDashboard() {
   const upcoming = appointments.filter(a => a.status === 'scheduled').slice(0, 5);
   const completed = appointments.filter(a => a.status === 'completed').length;
   const activeRx = prescriptions.filter(p => p.status === 'pending').length;
-  const hrData = [65, 72, 68, 80, 75, 72, 78, 74, 71, 69, 73, 77, 72, 74].map((v, i) => ({ name: `Day ${i}`, bpm: v }));
 
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '1rem', color: '#9CA3AF', fontFamily: "'Outfit', sans-serif" }}>
@@ -214,32 +203,35 @@ export default function PatientDashboard() {
 
         {/* CENTER */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* ECG */}
+          {/* Health Summary */}
           <div style={{ background: '#fff', borderRadius: 20, padding: '1.5rem', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Activity size={16} color="#1D4ED8" />
-                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827' }}>Heartbeat Monitor</span>
+                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#111827' }}>Health Profile</span>
                 </div>
-                <div style={{ color: '#9CA3AF', fontSize: '0.75rem', marginTop: '0.2rem' }}>75 BPM — Normal range</div>
+                <div style={{ color: '#9CA3AF', fontSize: '0.75rem', marginTop: '0.2rem' }}>Basic medical information</div>
               </div>
-              <span style={{ background: '#D1FAE5', color: '#059669', padding: '0.25rem 0.75rem', borderRadius: 9999, fontSize: '0.72rem', fontWeight: 700 }}>Good</span>
             </div>
-            <ECGLine color="#1D4ED8" />
-            <div style={{ height: 80, marginTop: '0.5rem' }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={hrData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="hrGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#1D4ED8" stopOpacity={0.15} />
-                      <stop offset="100%" stopColor="#1D4ED8" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <Area type="monotone" dataKey="bpm" stroke="#1D4ED8" strokeWidth={2} fill="url(#hrGrad)" dot={false} />
-                  <Tooltip contentStyle={{ borderRadius: 8, border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', fontSize: '0.78rem', fontFamily: "'Outfit', sans-serif" }} formatter={(v) => [`${v} BPM`, 'Heart Rate']} />
-                </AreaChart>
-              </ResponsiveContainer>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Blood Type</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827' }}>O+</div>
+              </div>
+              <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Allergies</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>Penicillin</div>
+              </div>
+              <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Height</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>175 cm</div>
+              </div>
+              <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Weight</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>72 kg</div>
+              </div>
             </div>
           </div>
 

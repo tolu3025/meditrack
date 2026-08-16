@@ -193,10 +193,10 @@ export default function Login() {
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem' }}>
             {[
-              { role: 'patient',  label: '🧑‍⚕️ Patient' },
-              { role: 'doctor',   label: '🩺 Doctor' },
-              { role: 'pharmacy', label: '💊 Pharmacist' },
-              { role: 'admin',    label: '🖥️ Admin' },
+              { role: 'patient',  label: 'Patient' },
+              { role: 'doctor',   label: 'Doctor' },
+              { role: 'pharmacy', label: 'Pharmacist' },
+              { role: 'admin',    label: 'Admin' },
             ].map(d => (
               <button
                 key={d.role}

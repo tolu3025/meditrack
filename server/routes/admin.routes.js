@@ -11,6 +11,7 @@ router.get('/appointments/stats', adminController.getAppointmentStats);
 router.get('/revenue', adminController.getRevenueStats);
 router.get('/users', adminController.getAllUsers);
 router.put('/users/:id/status', adminController.toggleUserStatus);
+router.put('/users/:id/role', adminController.updateUserRole);
 router.get('/departments', adminController.getDepartments);
 router.post('/departments', adminController.createDepartment);
 

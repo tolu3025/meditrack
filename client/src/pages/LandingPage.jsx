@@ -86,18 +86,25 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* ECG line indicator */}
+            {/* Basic Vitals indicator */}
             <div style={{ background: '#fff', borderRadius: 16, padding: '1.25rem', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Activity size={16} color="#1D4ED8" />
-                  <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>ECG Monitor</span>
+                  <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>Vitals Summary</span>
                 </div>
-                <span style={{ background: '#D1FAE5', color: '#059669', padding: '0.2rem 0.6rem', borderRadius: 9999, fontSize: '0.7rem', fontWeight: 700 }}>Good</span>
+                <span style={{ background: '#D1FAE5', color: '#059669', padding: '0.2rem 0.6rem', borderRadius: 9999, fontSize: '0.7rem', fontWeight: 700 }}>Optimal</span>
               </div>
-              <svg width="100%" height="50" viewBox="0 0 300 50">
-                <polyline points="0,30 20,30 30,5 40,45 50,30 70,30 80,15 90,38 100,30 130,30 140,8 150,42 160,30 200,30 210,18 220,35 230,30 300,30" fill="none" stroke="#1D4ED8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
+                <div>
+                  <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase' }}>Blood Pressure</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>120/80</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase' }}>Weight</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>72 kg</div>
+                </div>
+              </div>
             </div>
 
             {/* Upcoming appointment card */}

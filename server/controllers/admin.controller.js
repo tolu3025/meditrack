@@ -200,6 +200,36 @@ const toggleUserStatus = async (req, res, next) => {
 };
 
 /**
+ * User Management: update user role
+ */
+const updateUserRole = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    if (!['patient', 'doctor', 'pharmacist', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, message: 'Invalid role.' });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: `User role has been updated to ${role}.`,
+      data: { id: user.id, role: user.role },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Department Management CRUD
  */
 const getDepartments = async (req, res, next) => {
@@ -229,6 +259,7 @@ module.exports = {
   getRevenueStats,
   getAllUsers,
   toggleUserStatus,
+  updateUserRole,
   getDepartments,
   createDepartment,
 };

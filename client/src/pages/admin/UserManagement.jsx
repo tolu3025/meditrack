@@ -77,9 +77,34 @@ export default function UserManagement() {
                 </td>
                 <td>{u.email}</td>
                 <td>
-                  <span className="badge" style={{ background: 'rgba(14, 165, 233, 0.15)', color: '#0EA5E9', border: '1px solid rgba(14, 165, 233, 0.3)' }}>
-                    {u.role.toUpperCase()}
-                  </span>
+                  <select
+                    value={u.role}
+                    onChange={async (e) => {
+                      try {
+                        const res = await apiRequest(`/admin/users/${u.id}/role`, 'PUT', { role: e.target.value });
+                        if (res.success) await fetchUsers();
+                        else alert(res.message);
+                      } catch (err) {
+                        alert(err.message || 'Role change failed.');
+                      }
+                    }}
+                    style={{
+                      background: 'rgba(14, 165, 233, 0.15)',
+                      color: '#0EA5E9',
+                      border: '1px solid rgba(14, 165, 233, 0.3)',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '0.375rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      outline: 'none',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="patient">PATIENT</option>
+                    <option value="doctor">DOCTOR</option>
+                    <option value="pharmacist">PHARMACIST</option>
+                    <option value="admin">ADMIN</option>
+                  </select>
                 </td>
                 <td>{u.phone || 'N/A'}</td>
                 <td>{u.department?.name || 'Hospital Wide'}</td>
