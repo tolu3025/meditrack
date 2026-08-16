@@ -19,3 +19,10 @@ build/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local Android SDK tools
+android-sdk/
+*.properties
+y.txt
+sdk-install.bat
+
