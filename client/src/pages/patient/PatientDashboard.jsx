@@ -68,10 +68,8 @@ function WeekCalendar({ appointments }) {
 export default function PatientDashboard() {
   const { user } = useAuth();
   const { addToast } = useToast();
-  const [appointments, setAppointments] = useState([]);
-  const [prescriptions, setPrescriptions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [prevAppts, setPrevAppts] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isTablet, setIsTablet] = useState(window.innerWidth < 768);
 
   const fetchData = async () => {
     try {
@@ -104,7 +102,17 @@ export default function PatientDashboard() {
     fetchData();
     // Poll every 30 seconds for real-time updates
     const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+      setIsTablet(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
 
   const today = new Date().toISOString().split('T')[0];
@@ -120,17 +128,19 @@ export default function PatientDashboard() {
     </div>
   );
 
+  const profile = user?.patient_profile || {};
+
   return (
-    <div style={{ fontFamily: "'Outfit', sans-serif", background: '#F7F8FA', minHeight: '100%', padding: '2rem' }}>
+    <div style={{ fontFamily: "'Outfit', sans-serif", background: '#F7F8FA', minHeight: '100%', padding: isTablet ? '1rem' : '2rem' }}>
       {/* TOP */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: isTablet ? 'column' : 'row', justifyContent: 'space-between', alignItems: isTablet ? 'stretch' : 'flex-start', marginBottom: '2rem', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>Health Overview</h1>
+          <h1 style={{ fontSize: isTablet ? '1.5rem' : '2rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em', marginBottom: '0.25rem' }}>Health Overview</h1>
           <p style={{ color: '#9CA3AF', fontSize: '0.9rem' }}>
             You have <strong style={{ color: '#1D4ED8' }}>{todayAppts.length}</strong> appointment{todayAppts.length !== 1 ? 's' : ''} today
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', alignSelf: isTablet ? 'flex-start' : 'auto' }}>
           <div style={{ background: '#fff', border: '1px solid #E5E7EB', borderRadius: 9999, padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.82rem', color: '#374151', fontWeight: 600 }}>
             <Calendar size={14} color="#6B7280" />
             {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
@@ -141,8 +151,8 @@ export default function PatientDashboard() {
         </div>
       </div>
 
-      {/* 3-COLUMN GRID */}
-      <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr 280px', gap: '1.25rem', alignItems: 'start' }}>
+      {/* RESPONSIVE GRID */}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '200px 1fr 280px', gap: '1.25rem', alignItems: 'start' }}>
 
         {/* LEFT */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -215,22 +225,22 @@ export default function PatientDashboard() {
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: '1rem' }}>
               <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
-                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Blood Type</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827' }}>O+</div>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Blood Group</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>{profile.blood_group || 'Not recorded'}</div>
               </div>
               <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
-                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Allergies</div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>Penicillin</div>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Gender</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>{profile.gender || 'Not recorded'}</div>
               </div>
               <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
-                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Height</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>175 cm</div>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Date of Birth</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>{profile.date_of_birth || 'Not recorded'}</div>
               </div>
               <div style={{ background: '#F9FAFB', padding: '1rem', borderRadius: 12 }}>
-                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Weight</div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#111827' }}>72 kg</div>
+                <div style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>Address</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#111827' }}>{profile.address || 'Not recorded'}</div>
               </div>
             </div>
           </div>
@@ -258,22 +268,30 @@ export default function PatientDashboard() {
             </div>
           </div>
 
-          {/* Mini metric cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            {[
-              { label: 'R-R Interval', value: '0.7 sec', sub: 'Normal cardiac rhythm', data: [0.68,0.71,0.70,0.73,0.69,0.72,0.70], color: '#1D4ED8', icon: Activity },
-              { label: 'Blood Status', value: '115/70',  sub: 'mmHg — Optimal',        data: [118,116,120,113,115,117,115],       color: '#EF4444', icon: Droplets },
-            ].map(m => (
-              <div key={m.label} style={{ background: '#fff', borderRadius: 20, padding: '1.25rem', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
-                  <m.icon size={14} color={m.color} />
-                  <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#111827' }}>{m.label}</span>
-                </div>
-                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', marginBottom: '0.25rem' }}>{m.value}</div>
-                <div style={{ color: '#9CA3AF', fontSize: '0.7rem', marginBottom: '0.75rem' }}>{m.sub}</div>
-                <Sparkline data={m.data} color={m.color} />
+          {/* Real Patient Data Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: '1rem' }}>
+            <div style={{ background: '#fff', borderRadius: 20, padding: '1.25rem', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+                <Users size={14} color="#1D4ED8" />
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#111827' }}>Emergency Contact</span>
               </div>
-            ))}
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#111827', marginBottom: '0.25rem' }}>
+                {profile.emergency_contact_name || 'None'}
+              </div>
+              <div style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>
+                {profile.emergency_contact_phone || 'No phone recorded'}
+              </div>
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: 20, padding: '1.25rem', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+                <FileText size={14} color="#EF4444" />
+                <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#111827' }}>Medical Summary</span>
+              </div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#374151', lineHeight: '1.4', maxHeight: '3.6rem', overflowY: 'auto' }}>
+                {profile.medical_history_summary || 'No medical history recorded.'}
+              </div>
+            </div>
           </div>
         </div>
 

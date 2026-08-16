@@ -49,6 +49,14 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   if (!user) return null;
 
   const tabs = roleTabMap[user.role] || [];
@@ -57,28 +65,36 @@ export default function Navbar() {
     <header style={{
       height: 60, background: '#fff', borderBottom: '1px solid #F3F4F6',
       display: 'flex', alignItems: 'center', padding: '0 1.25rem',
+      justifyContent: 'space-between',
       gap: '1rem', position: 'sticky', top: 0, zIndex: 100, flexShrink: 0,
     }}>
       {/* Tab nav */}
-      <nav style={{ display: 'flex', gap: '0.25rem', background: '#F3F4F6', borderRadius: 9999, padding: '0.25rem', flex: 1, overflow: 'hidden' }}>
-        {tabs.map(t => (
-          <NavLink
-            key={t.path}
-            to={t.path}
-            style={({ isActive }) => ({
-              padding: '0.35rem 1rem', borderRadius: 9999,
-              fontWeight: isActive ? 700 : 500,
-              fontSize: '0.82rem',
-              color: isActive ? '#111827' : '#6B7280',
-              background: isActive ? '#fff' : 'transparent',
-              boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
-              textDecoration: 'none', transition: 'all 0.15s', whiteSpace: 'nowrap',
-            })}
-          >
-            {t.label}
-          </NavLink>
-        ))}
-      </nav>
+      {!isMobile ? (
+        <nav style={{ display: 'flex', gap: '0.25rem', background: '#F3F4F6', borderRadius: 9999, padding: '0.25rem', flex: 1, overflow: 'hidden', maxWidth: 'max-content' }}>
+          {tabs.map(t => (
+            <NavLink
+              key={t.path}
+              to={t.path}
+              style={({ isActive }) => ({
+                padding: '0.35rem 1rem', borderRadius: 9999,
+                fontWeight: isActive ? 700 : 500,
+                fontSize: '0.82rem',
+                color: isActive ? '#111827' : '#6B7280',
+                background: isActive ? '#fff' : 'transparent',
+                boxShadow: isActive ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+                textDecoration: 'none', transition: 'all 0.15s', whiteSpace: 'nowrap',
+              })}
+            >
+              {t.label}
+            </NavLink>
+          ))}
+        </nav>
+      ) : (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Activity size={20} color="#1D4ED8" strokeWidth={2.5} />
+          <span style={{ fontSize: '1rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.02em' }}>MediTrack</span>
+        </div>
+      )}
 
       {/* Right actions */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>

@@ -1,8 +1,12 @@
 import { handleMockRoute } from './mockData';
 
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-  ? '/api'
-  : 'http://localhost:5000/api';
+const isLocalVite = typeof window !== 'undefined' && 
+  window.location.hostname === 'localhost' && 
+  window.location.port !== '';
+
+const API_BASE_URL = isLocalVite
+  ? 'http://localhost:5000/api'
+  : 'https://meditrack-tawny.vercel.app/api';
 
 /**
  * Perform API request with automatic client-side mock fallback
