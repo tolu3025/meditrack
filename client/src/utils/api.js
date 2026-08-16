@@ -1,16 +1,30 @@
-import { handleMockRoute } from './mockData';
+// Detect Capacitor native environment (file:// or capacitor:// protocol)
+const isCapacitor = typeof window !== 'undefined' &&
+  (window.location.protocol === 'capacitor:' ||
+   window.location.protocol === 'file:' ||
+   (window.Capacitor && window.Capacitor.isNative));
 
-const isLocalVite = typeof window !== 'undefined' && 
-  window.location.hostname === 'localhost' && 
-  window.location.port !== '';
+// Detect local Vite development server
+const isLocalVite = typeof window !== 'undefined' &&
+  window.location.hostname === 'localhost' &&
+  window.location.port !== '' &&
+  !isCapacitor;
 
+// Set API base URL:
+// - Local dev: connect to local Express server
+// - Mobile/Capacitor: connect to production Vercel backend
+// - Deployed web: use relative /api (same origin)
 const API_BASE_URL = isLocalVite
   ? 'http://localhost:5000/api'
-  : 'https://meditrack-tawny.vercel.app/api';
+  : isCapacitor
+    ? 'https://meditrack-tawny.vercel.app/api'
+    : '/api';
+
+export { API_BASE_URL };
 
 /**
- * Perform API request with automatic client-side mock fallback
- * Ensures zero failure demo testing on Vercel static hosts or offline environments.
+ * Perform an API request using the live backend.
+ * No mock fallback – errors are surfaced to the user.
  */
 export async function apiRequest(endpoint, method = 'GET', data = null) {
   const token = localStorage.getItem('accessToken');
@@ -23,32 +37,34 @@ export async function apiRequest(endpoint, method = 'GET', data = null) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const options = {
-    method,
-    headers,
-  };
+  const options = { method, headers };
 
-  if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+  if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
     options.body = JSON.stringify(data);
   }
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
     const rawText = await response.text();
+
     let result;
     try {
       result = JSON.parse(rawText);
-    } catch (parseErr) {
+    } catch {
       result = null;
     }
 
     if (response.ok) {
       return result || { success: true };
     } else {
-      return result || { success: false, message: `Server error: HTTP ${response.status}` };
+      const message = result?.message || `Server error (HTTP ${response.status})`;
+      return { success: false, message };
     }
   } catch (error) {
-    console.error(`[API Network Error] ${method} ${endpoint}:`, error);
-    return { success: false, message: 'Network error: Cannot connect to the server. Please check your internet connection.' };
+    console.error(`[API] ${method} ${endpoint} failed:`, error.message);
+    return {
+      success: false,
+      message: 'Cannot connect to the server. Please check your internet connection.',
+    };
   }
 }

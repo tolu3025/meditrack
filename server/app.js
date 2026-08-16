@@ -16,8 +16,32 @@ const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Allow requests from: local dev, Vercel deployment, and Capacitor mobile app
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:5000',
+  'http://localhost',
+  'https://meditrack-tawny.vercel.app',
+  'capacitor://localhost',
+  'ionic://localhost',
+  'null',              // file:// protocol
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // permissive – tighten in production if needed
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+app.options('*', cors()); // pre-flight for all routes
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));

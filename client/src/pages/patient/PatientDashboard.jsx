@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  HeartPulse, Activity, Stethoscope, Calendar, FileText,
-  Clock, MoreHorizontal, ChevronLeft, ChevronRight,
+  Users, Activity, Stethoscope, Calendar, FileText,
+  Clock, MoreHorizontal,
   Pill, TrendingUp, Droplets, ArrowRight, CalendarCheck
 } from 'lucide-react';
 import { AreaChart, Area, ResponsiveContainer, Tooltip } from 'recharts';
@@ -70,6 +70,10 @@ export default function PatientDashboard() {
   const { addToast } = useToast();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [isTablet, setIsTablet] = useState(window.innerWidth < 768);
+  const [appointments, setAppointments] = useState([]);
+  const [prescriptions, setPrescriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [prevAppts, setPrevAppts] = useState([]);
 
   const fetchData = async () => {
     try {

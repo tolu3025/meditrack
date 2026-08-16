@@ -7,6 +7,7 @@ const { authorizeRoles } = require('../middleware/rbac');
 router.use(authenticateToken, authorizeRoles('admin'));
 
 router.get('/dashboard', adminController.getDashboardStats);
+router.get('/appointments', adminController.getAppointmentStats);
 router.get('/appointments/stats', adminController.getAppointmentStats);
 router.get('/revenue', adminController.getRevenueStats);
 router.get('/users', adminController.getAllUsers);
