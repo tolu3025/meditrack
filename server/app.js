@@ -91,6 +91,15 @@ app.use('/billing', billingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/admin', adminRoutes);
 
+// JSON 404 handler — must be BEFORE errorHandler
+// Prevents Vercel from returning HTML for unmatched routes
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.method} ${req.path}`,
+  });
+});
+
 // Centralized Error Handling Middleware
 app.use(errorHandler);
 
