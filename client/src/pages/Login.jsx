@@ -1,49 +1,38 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, Lock, Mail, AlertCircle, Shield, Stethoscope, Pill, User } from 'lucide-react';
+import { Activity, Mail, Lock } from 'lucide-react';
 
 export default function Login() {
-  const [email, setEmail] = useState('patient1@gmail.com');
-  const [password, setPassword] = useState('Password123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
-
-    try {
-      const user = await login(email, password);
-      const dashboards = {
-        patient: '/patient/dashboard',
-        doctor: '/doctor/dashboard',
-        pharmacist: '/pharmacy/dashboard',
-        admin: '/admin/dashboard',
-      };
-      navigate(dashboards[user.role] || '/');
-    } catch (err) {
-      setError(err.message || 'Invalid email or password.');
-    } finally {
-      setLoading(false);
+    const res = await login(email, password);
+    if (res.success) {
+      if (res.user.role === 'admin') navigate('/admin/dashboard');
+      else if (res.user.role === 'doctor') navigate('/doctor/dashboard');
+      else if (res.user.role === 'pharmacist') navigate('/pharmacy/dashboard');
+      else navigate('/patient/dashboard');
+    } else {
+      setError(res.message);
     }
   };
 
-  const demoAccounts = [
-    { role: 'Admin', email: 'admin@meditrack.ng', icon: Shield },
-    { role: 'Doctor', email: 'dr.emeka@meditrack.ng', icon: Stethoscope },
-    { role: 'Pharmacist', email: 'pharm.chioma@meditrack.ng', icon: Pill },
-    { role: 'Patient', email: 'patient1@gmail.com', icon: User },
-  ];
-
-  const selectDemo = (demoEmail) => {
-    setEmail(demoEmail);
-    setPassword('Password123!');
-    setError('');
+  const loadDemo = (role) => {
+    const demos = {
+      admin: { e: 'admin@meditrack.ng', p: 'Password123!' },
+      doctor: { e: 'dr.emeka@meditrack.ng', p: 'Password123!' },
+      pharmacy: { e: 'pharm.chioma@meditrack.ng', p: 'Password123!' },
+      patient: { e: 'patient1@gmail.com', p: 'Password123!' },
+    };
+    setEmail(demos[role].e);
+    setPassword(demos[role].p);
   };
 
   return (
@@ -52,139 +41,78 @@ export default function Login() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#0B0F19',
-      padding: '1.5rem',
+      padding: '2rem'
     }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '460px',
-        backgroundColor: '#1F2937',
-        border: '1px solid #374151',
-        borderRadius: '4px',
-        padding: '2.25rem 2rem',
-      }}>
-        {/* Header */}
-        <div style={{ borderBottom: '1px solid #374151', paddingBottom: '1.25rem', marginBottom: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{
-              width: '36px',
-              height: '36px',
-              backgroundColor: '#2563EB',
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Activity size={22} color="#FFFFFF" />
-            </div>
-            <div>
-              <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-                MEDITRACK HMS
-              </h1>
-              <p style={{ fontSize: '0.78rem', color: '#9CA3AF' }}>
-                Enterprise Hospital Management Platform
-              </p>
-            </div>
+      <div className="soft-card" style={{ width: '100%', maxWidth: '420px', padding: '2.5rem 2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            background: 'var(--color-primary-light)',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 1rem auto',
+            color: 'var(--color-primary)'
+          }}>
+            <Activity size={28} />
           </div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.5rem' }}>Welcome Back</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Sign in to continue to MediTrack.</p>
         </div>
 
         {error && (
-          <div style={{
-            backgroundColor: '#7F1D1D',
-            border: '1px solid #DC2626',
-            borderRadius: '4px',
-            padding: '0.75rem 1rem',
-            color: '#FCA5A5',
-            fontSize: '0.85rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            marginBottom: '1.25rem',
-          }}>
-            <AlertCircle size={18} />
-            <span>{error}</span>
+          <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-danger)', padding: '0.75rem', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', fontSize: '0.9rem', textAlign: 'center' }}>
+            {error}
           </div>
         )}
 
-        {/* Demo Account Selector */}
-        <div style={{ marginBottom: '1.25rem' }}>
-          <label className="form-label" style={{ fontSize: '0.72rem', color: '#9CA3AF' }}>
-            Demo Quick Login Presets:
-          </label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-            {demoAccounts.map((account) => {
-              const Icon = account.icon;
-              const isSelected = email === account.email;
-              return (
-                <button
-                  key={account.role}
-                  type="button"
-                  onClick={() => selectDemo(account.email)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.5rem 0.75rem',
-                    borderRadius: '4px',
-                    backgroundColor: isSelected ? '#2563EB' : '#111827',
-                    border: '1px solid',
-                    borderColor: isSelected ? '#3B82F6' : '#374151',
-                    color: isSelected ? '#FFFFFF' : '#D1D5DB',
-                    cursor: 'pointer',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                  }}
-                >
-                  <Icon size={14} />
-                  <span>{account.role}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label">Workstation Email</label>
-            <div style={{ position: 'relative' }}>
-              <Mail size={16} color="#9CA3AF" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
-              <input
-                type="email"
-                className="form-input"
-                style={{ paddingLeft: '2.5rem' }}
-                placeholder="user@meditrack.ng"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
+        <form onSubmit={handleLogin}>
+          <div className="form-group" style={{ position: 'relative' }}>
+            <label className="form-label">Email Address</label>
+            <Mail size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '1rem', top: '2.25rem' }} />
+            <input
+              type="email"
+              className="form-input"
+              style={{ paddingLeft: '2.5rem' }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
           </div>
 
-          <div className="form-group">
+          <div className="form-group" style={{ position: 'relative', marginBottom: '2rem' }}>
             <label className="form-label">Password</label>
-            <div style={{ position: 'relative' }}>
-              <Lock size={16} color="#9CA3AF" style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)' }} />
-              <input
-                type="password"
-                className="form-input"
-                style={{ paddingLeft: '2.5rem' }}
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
+            <Lock size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '1rem', top: '2.25rem' }} />
+            <input
+              type="password"
+              className="form-input"
+              style={{ paddingLeft: '2.5rem' }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
           </div>
 
-          <button
-            type="submit"
-            className="btn btn-primary"
-            style={{ width: '100%', padding: '0.75rem', marginTop: '0.5rem' }}
-            disabled={loading}
-          >
-            {loading ? 'Authenticating...' : 'Sign In to System'}
+          <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+            Sign In
           </button>
         </form>
+
+        <div style={{ marginTop: '2.5rem', borderTop: '1px solid var(--border-light)', paddingTop: '1.5rem' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Demo Quick Login Presets
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+             <button type="button" onClick={() => loadDemo('patient')} className="btn btn-secondary btn-sm" style={{ padding: '0.5rem' }}>Patient</button>
+             <button type="button" onClick={() => loadDemo('doctor')} className="btn btn-secondary btn-sm" style={{ padding: '0.5rem' }}>Doctor</button>
+             <button type="button" onClick={() => loadDemo('pharmacy')} className="btn btn-secondary btn-sm" style={{ padding: '0.5rem' }}>Pharmacy</button>
+             <button type="button" onClick={() => loadDemo('admin')} className="btn btn-secondary btn-sm" style={{ padding: '0.5rem' }}>Admin</button>
+          </div>
+        </div>
       </div>
     </div>
   );

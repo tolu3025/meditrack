@@ -6,42 +6,46 @@ import {
   Calendar,
   FileText,
   CreditCard,
-  User,
   Users,
   Pill,
   Building,
   Package,
   PlusCircle,
+  LogOut,
+  Settings,
+  HelpCircle,
+  Headphones
 } from 'lucide-react';
+import { Activity } from 'lucide-react';
 
 export default function Sidebar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   if (!user) return null;
 
   const roleNavItems = {
     patient: [
-      { path: '/patient/dashboard', label: 'Overview', icon: LayoutDashboard },
-      { path: '/patient/book', label: 'Book Appointment', icon: Calendar },
-      { path: '/patient/history', label: 'EHR Medical History', icon: FileText },
-      { path: '/patient/bills', label: 'Hospital Invoices', icon: CreditCard },
+      { path: '/patient/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/patient/book', label: 'Appointments', icon: Calendar },
+      { path: '/patient/history', label: 'Records', icon: FileText },
+      { path: '/patient/bills', label: 'Billing', icon: CreditCard },
     ],
     doctor: [
-      { path: '/doctor/dashboard', label: 'Workstation Queue', icon: LayoutDashboard },
-      { path: '/doctor/consultation', label: 'New EHR Consultation', icon: PlusCircle },
-      { path: '/doctor/appointments', label: 'Schedule Calendar', icon: Calendar },
-      { path: '/doctor/patients', label: 'Patient EHR Lookup', icon: Users },
+      { path: '/doctor/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/doctor/consultation', label: 'Consult', icon: PlusCircle },
+      { path: '/doctor/appointments', label: 'Schedule', icon: Calendar },
+      { path: '/doctor/patients', label: 'Patients', icon: Users },
     ],
     pharmacist: [
-      { path: '/pharmacy/dashboard', label: 'Dispensary Queue', icon: LayoutDashboard },
-      { path: '/pharmacy/queue', label: 'Pending Prescriptions', icon: Pill },
-      { path: '/pharmacy/inventory', label: 'Medication Inventory', icon: Package },
+      { path: '/pharmacy/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/pharmacy/queue', label: 'Queue', icon: Pill },
+      { path: '/pharmacy/inventory', label: 'Inventory', icon: Package },
     ],
     admin: [
-      { path: '/admin/dashboard', label: 'Executive Analytics', icon: LayoutDashboard },
-      { path: '/admin/users', label: 'User Accounts', icon: Users },
+      { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/admin/users', label: 'Users', icon: Users },
       { path: '/admin/departments', label: 'Departments', icon: Building },
-      { path: '/admin/appointments', label: 'Hospital Appointments', icon: Calendar },
-      { path: '/admin/billing', label: 'Invoices & Revenue', icon: CreditCard },
+      { path: '/admin/appointments', label: 'Appointments', icon: Calendar },
+      { path: '/admin/billing', label: 'Billing', icon: CreditCard },
     ],
   };
 
@@ -49,52 +53,71 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: '230px',
-      backgroundColor: '#111827',
-      borderRight: '1px solid #374151',
-      padding: '1.25rem 0.75rem',
+      width: '80px',
+      backgroundColor: 'transparent',
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.4rem',
+      alignItems: 'center',
+      padding: '1.5rem 0',
+      height: '100vh',
+      position: 'sticky',
+      top: '0',
     }}>
-      <div style={{
-        padding: '0 0.5rem 0.75rem 0.5rem',
-        fontSize: '0.68rem',
-        fontWeight: 700,
-        color: '#9CA3AF',
-        letterSpacing: '0.06em',
-        textTransform: 'uppercase',
-        borderBottom: '1px solid #1F2937',
-        marginBottom: '0.5rem',
-      }}>
-        {user.role} WORKSTATION
+      {/* Brand Icon */}
+      <div style={{ marginBottom: '2.5rem', color: 'var(--color-accent)' }}>
+        <Activity size={32} strokeWidth={2.5} />
       </div>
 
-      {navItems.map((item) => {
-        const Icon = item.icon;
-        return (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            style={({ isActive }) => ({
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              padding: '0.65rem 0.85rem',
-              borderRadius: '4px',
-              fontWeight: isActive ? 700 : 500,
-              fontSize: '0.85rem',
-              color: isActive ? '#FFFFFF' : '#D1D5DB',
-              backgroundColor: isActive ? '#2563EB' : 'transparent',
-              border: isActive ? '1px solid #1D4ED8' : '1px solid transparent',
-              transition: 'all 0.15s ease',
-            })}
-          >
-            <Icon size={16} />
-            <span>{item.label}</span>
-          </NavLink>
-        );
-      })}
+      {/* Navigation Icons */}
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, width: '100%', alignItems: 'center' }}>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              title={item.label}
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '48px',
+                height: '48px',
+                borderRadius: '16px',
+                color: isActive ? 'var(--color-accent)' : 'var(--text-muted)',
+                backgroundColor: isActive ? 'var(--color-accent-light)' : 'transparent',
+                transition: 'var(--transition)',
+              })}
+              className={({ isActive }) => !isActive ? 'hover-nav' : ''}
+            >
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+            </NavLink>
+          );
+        })}
+      </nav>
+
+      {/* Bottom Icons (Settings, Support, Logout) */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', alignItems: 'center' }}>
+        <button title="Support" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
+          <Headphones size={22} strokeWidth={2} />
+        </button>
+        <button title="Help" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
+          <HelpCircle size={22} strokeWidth={2} />
+        </button>
+        <button title="Settings" style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem' }}>
+          <Settings size={22} strokeWidth={2} />
+        </button>
+        <button title="Logout" onClick={logout} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '0.5rem', marginTop: '0.5rem' }}>
+          <LogOut size={22} strokeWidth={2} />
+        </button>
+      </div>
+
+      <style>{`
+        .hover-nav:hover {
+          color: var(--color-primary) !important;
+          background-color: var(--color-primary-light) !important;
+        }
+      `}</style>
     </aside>
   );
 }

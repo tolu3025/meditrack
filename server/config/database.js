@@ -7,7 +7,19 @@ const dialect = process.env.DB_DIALECT || 'sqlite';
 
 let sequelize;
 
-if (dialect === 'sqlite') {
+if (process.env.DATABASE_URL) {
+  // Use connection string for Supabase PostgreSQL
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: 'postgres',
+    logging: false,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  });
+} else if (dialect === 'sqlite') {
   // Use :memory: or /tmp/meditrack.sqlite on Vercel serverless environment
   const storagePath = isVercel 
     ? ':memory:' 
@@ -26,7 +38,7 @@ if (dialect === 'sqlite') {
     {
       host: process.env.DB_HOST || 'localhost',
       port: process.env.DB_PORT || 3306,
-      dialect: 'mysql',
+      dialect: dialect,
       logging: false,
       pool: {
         max: 10,
