@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
+import LandingPage from './pages/LandingPage';
 
 // Patient Portal Pages
 import PatientDashboard from './pages/patient/PatientDashboard';
@@ -27,7 +28,13 @@ import UserManagement from './pages/admin/UserManagement';
 
 function MainLayout({ children }) {
   const { user } = useAuth();
+  
+  // If no user, or if we are on the landing page or login page, don't show the dashboard layout
   if (!user) return <>{children}</>;
+
+  // Check if current path is exactly '/'
+  const isLandingPage = window.location.pathname === '/';
+  if (isLandingPage) return <>{children}</>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -46,6 +53,7 @@ export default function App() {
       <Router>
         <MainLayout>
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
 
             {/* Patient Routes */}
@@ -82,7 +90,7 @@ export default function App() {
             </Route>
 
             {/* Default Catch All */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </MainLayout>
       </Router>
