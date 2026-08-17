@@ -252,63 +252,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
-                    // Quick Demo Logins
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.info_outline, color: theme.primaryColor, size: 18),
-                              const SizedBox(width: 8),
-                              const Text(
-                                'Quick Demo Accounts',
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _emailController.text = 'patient1@gmail.com';
-                                _passwordController.text = 'Password123!';
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: theme.primaryColor,
-                              elevation: 0,
-                              side: BorderSide(color: Colors.grey.shade200),
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Demo Patient Login', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                                Icon(Icons.arrow_forward, size: 14),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.0),
-                            child: Text(
-                              'Doctor and Pharmacist login credentials exist on the backend to simulate services (e.g. Dr. Emeka, Pharm. Chioma). Use the Doctor and Pharmacy menus inside the app to browse them.',
-                              style: TextStyle(fontSize: 10.5, color: Colors.black54),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
