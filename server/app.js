@@ -23,6 +23,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5000',
   'http://localhost',
   'https://meditrack-tawny.vercel.app',
+  'https://meditrack-i1p8.onrender.com',
   'capacitor://localhost',
   'ionic://localhost',
   'null',              // file:// protocol

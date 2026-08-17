@@ -10,14 +10,18 @@ const isLocalVite = typeof window !== 'undefined' &&
   window.location.port !== '' &&
   !isCapacitor;
 
+// Backend URLs
+const RENDER_URL = 'https://meditrack-i1p8.onrender.com'; // Render backend
+const VERCEL_URL = 'https://meditrack-tawny.vercel.app';
+
 // Set API base URL:
 // - Local dev: connect to local Express server
-// - Mobile/Capacitor: connect to production Vercel backend
-// - Deployed web: use relative /api (same origin)
+// - Mobile/Capacitor: connect to Render production backend
+// - Deployed web: use relative /api (same origin as Vercel frontend)
 const API_BASE_URL = isLocalVite
   ? 'http://localhost:5000/api'
   : isCapacitor
-    ? 'https://meditrack-tawny.vercel.app/api'
+    ? `${RENDER_URL}/api`
     : '/api';
 
 export { API_BASE_URL };
