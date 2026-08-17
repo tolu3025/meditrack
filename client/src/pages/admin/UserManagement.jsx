@@ -43,7 +43,7 @@ export default function UserManagement() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800 }}>User Accounts Management</h1>
-          <p style={{ color: '#94A3B8' }}>Manage doctors, pharmacists, admins, and patient accounts across MediTrack.</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Manage doctors, pharmacists, admins, and patient accounts across MediTrack.</p>
         </div>
         <div>
           <select className="form-select" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
@@ -73,7 +73,7 @@ export default function UserManagement() {
             {filteredUsers.map((u) => (
               <tr key={u.id}>
                 <td>
-                  <strong style={{ color: '#F8FAFC' }}>{u.first_name} {u.last_name}</strong>
+                  <strong style={{ color: 'var(--text-primary)' }}>{u.first_name} {u.last_name}</strong>
                 </td>
                 <td>{u.email}</td>
                 <td>
