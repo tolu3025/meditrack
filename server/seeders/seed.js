@@ -70,6 +70,7 @@ async function seed() {
     // 4. Seed Doctors (10)
     console.log('🌱 Seeding Doctors...');
     const doctorUsers = [
+      { email: 'williamsbenjaminacc@gmail.com', first_name: 'Benjamin', last_name: 'Williams', specialization: 'General Physician', dept: 'General Medicine', fee: 6500.00, license: 'MDCN-76431' },
       { email: 'dr.emeka@meditrack.ng', first_name: 'Emeka', last_name: 'Okonkwo', specialization: 'Cardiologist', dept: 'Cardiology', fee: 15000.00, license: 'MDCN-10492' },
       { email: 'dr.amina@meditrack.ng', first_name: 'Amina', last_name: 'Bello', specialization: 'Pediatrician', dept: 'Pediatrics', fee: 10000.00, license: 'MDCN-20391' },
       { email: 'dr.babatunde@meditrack.ng', first_name: 'Babatunde', last_name: 'Adeleke', specialization: 'General Physician', dept: 'General Medicine', fee: 8000.00, license: 'MDCN-39102' },

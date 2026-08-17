@@ -2,6 +2,8 @@ const {
   User,
   Patient,
   Doctor,
+  Pharmacist,
+  Administrator,
   Appointment,
   Prescription,
   Medication,
@@ -218,6 +220,41 @@ const updateUserRole = async (req, res, next) => {
 
     user.role = role;
     await user.save();
+
+    // Create associated profile if it doesn't exist
+    if (role === 'patient') {
+      const exists = await Patient.findOne({ where: { user_id: user.id } });
+      if (!exists) {
+        await Patient.create({ user_id: user.id });
+      }
+    } else if (role === 'doctor') {
+      const exists = await Doctor.findOne({ where: { user_id: user.id } });
+      if (!exists) {
+        await Doctor.create({
+          user_id: user.id,
+          specialization: 'General Practitioner',
+          license_number: `MDCN-${Date.now()}`,
+          consultation_fee: 5000.00,
+        });
+      }
+    } else if (role === 'pharmacist') {
+      const exists = await Pharmacist.findOne({ where: { user_id: user.id } });
+      if (!exists) {
+        await Pharmacist.create({
+          user_id: user.id,
+          license_number: `PCN-${Date.now()}`,
+          shift: 'Morning',
+        });
+      }
+    } else if (role === 'admin') {
+      const exists = await Administrator.findOne({ where: { user_id: user.id } });
+      if (!exists) {
+        await Administrator.create({
+          user_id: user.id,
+          admin_level: 'Admin',
+        });
+      }
+    }
 
     res.json({
       success: true,

@@ -40,7 +40,7 @@ Default password for all pre-seeded accounts is **`Password123!`**.
 | Role | Email | Password | Features Accessible |
 | :--- | :--- | :--- | :--- |
 | **Admin** | `toluwanimioyetade@gmail.com` <br> `admin@meditrack.ng` | `Password123!` | User Account Creator, Analytics, Department Config, Revenue |
-| **Doctor** | `dr.emeka@meditrack.ng` | `Password123!` | Consultation Queue, Clinical EHR Record Creator, Prescriptions |
+| **Doctor** | `williamsbenjaminacc@gmail.com` <br> `dr.emeka@meditrack.ng` | `Password123!` | Consultation Queue, Clinical EHR Record Creator, Prescriptions |
 | **Pharmacist** | `pharm.chioma@meditrack.ng` | `Password123!` | Prescription Dispenser Queue, Inventory Management |
 | **Patient** | `patient1@gmail.com` | `Password123!` | Appointment Scheduling, EHR History, Bill Ledger, Drug Purchases |
 
