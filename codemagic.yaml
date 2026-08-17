@@ -29,7 +29,6 @@ workflows:
           keychain initialize
           if [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]; then
             echo "Signing keys not configured in Codemagic. Building unsigned release package..."
-            xcode-project use-profiles --unsigned
           else
             echo "Signing keys found. Setting up profile integration..."
             app-store-connect fetch-signing-files "ng.meditrack.patient" --project-id "$APP_STORE_CONNECT_PROJECT_KEY_ID" --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" --create
