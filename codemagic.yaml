@@ -37,9 +37,6 @@ workflows:
       - name: Flutter pub get
         script: |
           flutter pub get
-      - name: Install Cocoapods
-        script: |
-          cd ios && pod install
       - name: Build iOS App
         script: |
           if [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]; then
