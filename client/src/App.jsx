@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import Navbar from './components/Navbar';
@@ -35,7 +35,8 @@ const NO_SHELL_PATHS = ['/', '/login', '/signup'];
 
 function MainLayout({ children }) {
   const { user } = useAuth();
-  const path = window.location.pathname;
+  const location = useLocation();
+  const path = location.pathname;
 
   // No shell for public pages
   if (!user || NO_SHELL_PATHS.includes(path)) return <>{children}</>;
