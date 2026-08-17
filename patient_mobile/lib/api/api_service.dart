@@ -272,7 +272,13 @@ class ApiService {
 
       final body = jsonDecode(response.body);
       if (response.statusCode == 200 && body['success'] == true) {
-        final List list = body['data'] ?? [];
+        final rawData = body['data'];
+        List list = [];
+        if (rawData is List) {
+          list = rawData;
+        } else if (rawData is Map && rawData['invoices'] != null) {
+          list = rawData['invoices'];
+        }
         return list.map((i) => Invoice.fromJson(i)).toList();
       }
     } catch (e) {
