@@ -50,6 +50,8 @@ workflows:
             flutter build ipa --release
           fi
     artifacts:
+      - build/ios/ipa/*.ipa
+      - build/ios/iphoneos/*.ipa
       - patient_mobile/build/ios/ipa/*.ipa
       - patient_mobile/build/ios/iphoneos/*.ipa
     publishing:
