@@ -6,6 +6,9 @@ const {
   Prescription,
   PrescriptionItem,
   User,
+  Invoice,
+  InvoiceItem,
+  Medication,
 } = require('../models');
 
 /**
@@ -79,6 +82,67 @@ const createMedicalRecord = async (req, res, next) => {
       }));
 
       await PrescriptionItem.bulkCreate(itemsToCreate);
+    }
+
+    // AUTOMATED BILLING ACCUMULATOR
+    try {
+      const doctorProfile = await Doctor.findByPk(doctor_id, {
+        include: [{ model: User, as: 'user', attributes: ['first_name', 'last_name'] }]
+      });
+      const consultationFee = doctorProfile ? parseFloat(doctorProfile.consultation_fee || 0) : 0;
+      let invoiceItems = [];
+
+      // 1. Add Consultation fee charge
+      if (consultationFee > 0) {
+        const docName = doctorProfile?.user ? `${doctorProfile.user.first_name} ${doctorProfile.user.last_name}` : 'Consulting Doctor';
+        invoiceItems.push({
+          description: `Consultation Fee (Dr. ${docName})`,
+          amount: consultationFee,
+          item_type: 'consultation'
+        });
+      }
+
+      // 2. Add Prescription items estimate charges
+      if (prescriptionData && Array.isArray(prescriptionData) && prescriptionData.length > 0) {
+        for (const pItem of prescriptionData) {
+          if (pItem.medication_id) {
+            const med = await Medication.findByPk(pItem.medication_id);
+            if (med) {
+              const qty = pItem.quantity || 1;
+              const price = parseFloat(med.unit_price || med.unitPrice || 0);
+              if (price > 0) {
+                invoiceItems.push({
+                  description: `${med.name} (x${qty})`,
+                  amount: price * qty,
+                  item_type: 'medication'
+                });
+              }
+            }
+          }
+        }
+      }
+
+      const totalAmount = invoiceItems.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+
+      if (totalAmount > 0) {
+        const invoice = await Invoice.create({
+          patient_id,
+          appointment_id: appointment_id || null,
+          prescription_id: createdPrescription ? createdPrescription.id : null,
+          total_amount: totalAmount,
+          status: 'unpaid'
+        });
+
+        const invoiceItemsWithId = invoiceItems.map(item => ({
+          invoice_id: invoice.id,
+          ...item
+        }));
+
+        await InvoiceItem.bulkCreate(invoiceItemsWithId);
+        console.log(`✅ Automated Invoice created successfully for Patient ${patient_id}. Total: ₦${totalAmount}`);
+      }
+    } catch (billingErr) {
+      console.error('⚠️ Failed to generate automated consultation invoice:', billingErr.message);
     }
 
     const result = await MedicalRecord.findByPk(medicalRecord.id, {
