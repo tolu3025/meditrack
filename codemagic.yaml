@@ -1,0 +1,65 @@
+# Codemagic CI/CD configuration for MediTrack iOS
+
+workflows:
+  ios-build:
+    name: MediTrack iOS Build
+    max_build_duration: 60
+    instance_type: mac_mini_co
+    environment:
+      groups:
+        - app_store_credentials # Define this group in Codemagic UI if using automated signing
+      vars:
+        XCODE_WORKSPACE: "patient_mobile/ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'master'
+          include: true
+    working_directory: patient_mobile
+    scripts:
+      - name: Set up keychain and code signing
+        script: |
+          # If provisioning profiles are set up in Codemagic environment variables, 
+          # this utility installs them. Otherwise it defaults to unsigned for debugging.
+          keychain initialize
+          if [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]; then
+            echo "Signing keys not configured in Codemagic. Building unsigned release package..."
+            xcode-project use-profiles --unsigned
+          else
+            echo "Signing keys found. Setting up profile integration..."
+            app-store-connect fetch-signing-files "ng.meditrack.patient" --project-id "$APP_STORE_CONNECT_PROJECT_KEY_ID" --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" --private-key "$APP_STORE_CONNECT_PRIVATE_KEY" --create
+            xcode-project use-profiles
+          fi
+      - name: Flutter pub get
+        script: |
+          flutter pub get
+      - name: Install Cocoapods
+        script: |
+          cd ios && pod install
+      - name: Build iOS App
+        script: |
+          if [ -z "$APP_STORE_CONNECT_PRIVATE_KEY" ]; then
+            flutter build ios --release --no-codesign
+            # Package the app into an unsigned payload zip so it can be installed on simulators or jailbroken devices
+            cd build/ios/iphoneos
+            mkdir Payload
+            mv Runner.app Payload/
+            zip -r Runner.ipa Payload
+          else
+            flutter build ipa --release
+          fi
+    artifacts:
+      - patient_mobile/build/ios/ipa/*.ipa
+      - patient_mobile/build/ios/iphoneos/*.ipa
+    publishing:
+      email:
+        recipients:
+          - toluwanimioyetade@gmail.com
+        on_failure: true
+        on_cancel: true
+        on_success: true
