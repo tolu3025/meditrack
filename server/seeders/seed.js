@@ -42,6 +42,7 @@ async function seed() {
     const adminUsers = [
       { email: 'admin@meditrack.ng', first_name: 'Babajide', last_name: 'Sanwo-Olu', role: 'admin', phone: '+2348031112233', password_hash: defaultPasswordHash },
       { email: 'sysadmin@meditrack.ng', first_name: 'Hadiza', last_name: 'Bala', role: 'admin', phone: '+2348022223344', password_hash: defaultPasswordHash },
+      { email: 'toluwanimioyetade@gmail.com', first_name: 'Toluwanimi', last_name: 'Oyetade', role: 'admin', phone: '+2348035552211', password_hash: defaultPasswordHash },
     ];
     for (const adminData of adminUsers) {
       const u = await User.create(adminData);
